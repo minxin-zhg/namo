@@ -1,0 +1,16 @@
+type: "muon"
+
+# muon params
+learning_rate: 0.0013
+beta: ${.beta2} # beta for Muon
+weight_decay: 1e-1
+
+# adamw params
+beta1: 0.9
+beta2: 0.95
+adamw_weight_decay: 0 
+
+# learning rate decay settings
+warmup: 2000
+decay: 0.4
+min_lr_ratio: 0.1   # should be ~= 0.1 per Chinchilla

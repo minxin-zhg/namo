@@ -1,0 +1,15 @@
+__pycache__/
+env/
+venv/
+.ipynb_checkpoints/
+.DS_Store
+.idea
+*.bin
+*.pkl
+*.pt
+*.pyc
+input.txt
+outputs/
+data/
+wandb/
+*.egg-info/

@@ -1,0 +1,49 @@
+name: gpt2m_namo_d
+method: grid
+metric:
+  name: val/loss
+  goal: minimize
+
+parameters:
+  optim.learning_rate:
+    values: [5e-3, 7e-3, 9e-3, 1.2e-2, 1.5e-2]
+  optim.col_state_clamp_c:
+    values: [0.12, 0.40, 0.75, 0.90]
+
+command:
+  - ${env}
+  - PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+  - torchrun
+  - --standalone
+  - --nproc_per_node=4
+  - train_gpt2.py
+  - hydra.job.chdir=False
+  - ${args_no_hyphens}
+
+  # --- GPT-2 MEDIUM PRETRAINING (scratch) ---
+  - init_from=scratch
+
+  # GPT-2 medium architecture
+  - model.n_layer=24
+  - model.n_head=16
+  - model.n_embd=1024
+
+  # (optional but makes it explicit / GPT-2-like)
+  - model.dropout=0.0
+
+  # Sequence + batch settings (tune if needed)
+  - block_size=1024
+  - batch_size=40
+  - gradient_accumulation_steps=12
+
+  # optimizer
+  - optim=namo-d
+  - wandb_log=1
+  - optim.decay=0
+
+  # run length
+  - max_iters=10000
+
+  # output organization
+  - exp=gpt2m_pretrain
+  - "exp_name=gpt2m_namo_d_lr${optim.learning_rate}_c${optim.col_state_clamp_c}"

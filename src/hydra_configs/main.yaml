@@ -1,0 +1,43 @@
+defaults:
+  - model: gpt2-s
+  - optim: adamw
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# I/O
+eval_interval: 500
+log_interval: 100
+eval_iters: 200
+eval_only: False  # if True, script exits right after the first eval
+always_save_checkpoint: True  # if True, always save a checkpoint after each eval
+init_from: "scratch"  # 'scratch' or 'resume' or 'gpt2*'
+
+# logging
+exp: "gpt2"
+exp_name: ???
+wandb_log: False  # disabled by default
+wandb:
+  project: namo
+  entity: schaefferlab1
+  notes: null
+  name: ${..exp_name}
+  id: null
+
+# data
+data_dir: "/data/shared/dataset"
+dataset: "openwebtext"
+gradient_accumulation_steps: 8 # (10 * 4 gpu) used to simulate larger batch sizes
+batch_size: 60  # if gradient_accumulation_steps > 1, this is the micro-batch size
+block_size: 1024
+
+# optimizer
+max_iters: 100000  # total number of training iterations
+grad_clip: 1.0  # clip gradients at this value, or disable if == 0.0
+
+compile: 1  # use PyTorch 2.0 to compile the model to be faster
+
+hydra:  
+  output_subdir: null
+  run:  
+    dir: .

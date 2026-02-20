@@ -1,0 +1,42 @@
+[project]
+name = "namo"
+version = "0.1.0"
+description = "NAMO"
+readme = "README.md"
+requires-python = ">=3.11"
+
+dependencies = [
+    "torch (>= 2.5.1)",
+    "numpy",
+    "transformers",
+    "tiktoken",
+    "tqdm",
+    "wandb",
+    "datasets",
+    "omegaconf",
+    "hydra-core",
+    "matplotlib"
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "jupyter",
+    "ipython"
+]
+
+#### Package build ####
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+#### Format ####
+[tool.ruff]
+line-length = 120
+lint.ignore = ["D100", "D104", "E731", "E741", "E402", "E722", "F401", "F841"]
