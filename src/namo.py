@@ -9,7 +9,6 @@ import torch
 def _nanmin(x: torch.Tensor) -> torch.Tensor:
     return x.masked_fill(torch.isnan(x), float("inf")).min()
 
-
 def _nanmax(x: torch.Tensor) -> torch.Tensor:
     return x.masked_fill(torch.isnan(x), -float("inf")).max()
 
