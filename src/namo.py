@@ -219,7 +219,7 @@ class NAMO(torch.optim.Optimizer):
                 bc1 = 1.0 - (momentum**step_t)
                 bc2 = 1.0 - (mu2**step_t)
 
-                v_t = torch.sqrt(v_squared + float(eps_adn))  # 0-d tensor
+                v_t = v_squared.sqrt().add_(eps_adn) # 0-d tensor
                 adaptive_lr = (lr * math.sqrt(bc2) / (bc1 + 1e-12)) * (gn_m / v_t)
                 adaptive_lr_clamped = adaptive_lr.clamp(max=1.0)
 
@@ -403,7 +403,9 @@ class NAMO_D(torch.optim.Optimizer):
 
                 # per-col scale: ||M_col|| / sqrt(V + eps)
                 nc_M = self._col_norms(m_for_update).to(dtype=V.dtype)  # [n]
-                col_scale = nc_M * torch.rsqrt(V + float(eps_adn))  # [n]
+                denom = torch.sqrt(V)
+                denom.add_(eps_adn) 
+                col_scale = nc_M / denom
 
                 # clamp toward the average
                 if 0.0 < float(c_clamp) <= 1.0:
