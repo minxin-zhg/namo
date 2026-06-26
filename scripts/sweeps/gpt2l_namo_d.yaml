@@ -1,0 +1,53 @@
+program: src/train_gpt2.py
+entity: schaefferlab1
+project: namo
+name: gpt2l_namo_d
+method: grid
+metric:
+  name: val/loss
+  goal: minimize
+
+parameters:
+  optim.learning_rate:
+    values: [3.5e-3, 5e-3, 7e-3, 9e-3, 1.2e-2, 1.5e-2]
+  optim.col_state_clamp_c:
+    values: [0.12, 0.40, 0.75, 0.90]
+
+command:
+  - ${env}
+  - PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+  - torchrun
+  - --standalone
+  - --nproc_per_node=8
+  - ${program}
+  - hydra.job.chdir=False
+
+  # --- GPT-2 LARGE PRETRAINING (scratch) ---
+  - init_from=scratch
+
+  # GPT-2 large architecture
+  - model.n_layer=36
+  - model.n_head=20
+  - model.n_embd=1280
+  - model.dropout=0.0
+  - model.bias=False
+
+  # Sequence + batch settings
+  - block_size=1024
+  - batch_size=16
+  - gradient_accumulation_steps=32
+
+  # optimizer
+  - optim=namo-d
+  - wandb_log=1
+  - wandb.project=namo
+  - wandb.entity=schaefferlab1
+  - optim.decay=0
+  - ${args_no_hyphens}
+
+  # run length
+  - max_iters=10000
+
+  # output organization
+  - exp=gpt2l_pretrain
+  - "exp_name=gpt2l_namo_d_lr${optim.learning_rate}_c${optim.col_state_clamp_c}"
