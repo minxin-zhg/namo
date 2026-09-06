@@ -224,9 +224,9 @@ class NAMO(torch.optim.Optimizer):
                 adaptive_lr_clamped = adaptive_lr.clamp(max=1.0)
 
                 # scale update with tunable coeff
-                A, B = p.shape[:2]
-                adjusted_lr = self.adjust_lr_for_muon(adaptive_lr, p.shape, scale_coeff)
-                adjusted_lr = (adaptive_lr * (scale_coeff * math.sqrt(max(A, B)))).clamp(max=1.0)
+                adjusted_lr = self.adjust_lr_for_muon(
+                    adaptive_lr, p.shape, scale_coeff
+                ).clamp(max=1.0)
 
                 # apply weight decay
                 p.data.mul_(1.0 - wd * adaptive_lr_clamped)
