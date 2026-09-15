@@ -13,3 +13,5 @@ outputs/
 data/
 wandb/
 *.egg-info/
+logs/
+slurm-*.out

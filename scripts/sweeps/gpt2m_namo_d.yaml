@@ -15,7 +15,7 @@ command:
   - PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
   - torchrun
   - --standalone
-  - --nproc_per_node=4
+  - --nproc_per_node=8
   - train_gpt2.py
   - hydra.job.chdir=False
   - ${args_no_hyphens}

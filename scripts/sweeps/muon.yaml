@@ -11,7 +11,7 @@ parameters:
 command:
   - torchrun
   - --standalone
-  - --nproc_per_node=4
+  - --nproc_per_node=8
   - train_gpt2.py
   - ${args_no_hyphens}
   - optim=muon

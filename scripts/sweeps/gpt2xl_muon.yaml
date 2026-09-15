@@ -1,7 +1,7 @@
 program: src/train_gpt2.py
 entity: schaefferlab1
 project: namo
-name: gpt2l_muon_1
+name: gpt2xl_muon_1
 method: grid
 metric:
   name: val/loss
@@ -9,7 +9,8 @@ metric:
 
 parameters:
   optim.learning_rate:
-    values: [1.1e-3, 5e-4, 3e-4, 2e-4, 1e-4]
+    # values: [0.0006, 0.0009, 0.0013, 0.0018, 0.0025]
+    values: [5e-4, 4e-4, 3e-4, 2e-4]
 
 command:
   - ${env}
@@ -20,20 +21,20 @@ command:
   - ${program}
   - hydra.job.chdir=False
 
-  # --- GPT-2 LARGE PRETRAINING (scratch) ---
+  # --- GPT-2 XL PRETRAINING (scratch) ---
   - init_from=scratch
 
-  # GPT-2 large architecture
-  - model.n_layer=36
-  - model.n_head=20
-  - model.n_embd=1280
+  # GPT-2 XL architecture
+  - model.n_layer=48
+  - model.n_head=25
+  - model.n_embd=1600
   - model.dropout=0.0
   - model.bias=False
 
   # Sequence + batch settings
   - block_size=1024
-  - batch_size=16
-  - gradient_accumulation_steps=32
+  - batch_size=8
+  - gradient_accumulation_steps=64
 
   # optimizer
   - optim=muon
@@ -47,5 +48,5 @@ command:
   - max_iters=10000
 
   # output organization
-  - exp=gpt2l_pretrain
-  - "exp_name=gpt2l_muon_lr${optim.learning_rate}"
+  - exp=gpt2xl_pretrain
+  - "exp_name=gpt2xl_muon_lr${optim.learning_rate}"
